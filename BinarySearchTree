@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    struct node *prev;
+    int data;
+    struct node *next;
+};
+
+struct node *root=NULL;
+
+struct node *createnode(int data)
+{
+    struct node*newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    newnode->next=newnode->prev=NULL;
+    return newnode;
+}
+void Insert(struct node *currentnode,int data)
+{
+    if(currentnode==NULL)
+    {
+        root=createnode(data);
+        return;
+    }
+    if(data<currentnode->data)
+    {
+        if(currentnode->prev!=NULL)
+        {
+            Insert(currentnode->prev,data);
+        }
+        else
+        {
+            currentnode->prev=createnode(data);
+        }
+    }
+    else
+    {
+        if(currentnode->next!=NULL)
+        {
+            Insert(currentnode->next,data);
+        }
+        else
+        {
+            currentnode->next=createnode(data);
+        }
+    }
+}
+void display(struct node *node)
+{
+    if(node!=NULL)
+    {
+        display(node->prev);
+        printf("%d ",node->data);
+        display(node->next);
+    }
+}
+int main()
+{
+    int N;
+    scanf("%d",&N);
+    int arr[N];
+    for(int i=0;i<N;i++)
+    {
+        scanf("%d",&arr[i]);
+        Insert(root,arr[i]);
+    }
+    display(root);
+
+    return 0;
+}
