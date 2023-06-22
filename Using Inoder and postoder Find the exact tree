@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Function to construct binary tree from inorder and postorder traversals
+struct TreeNode* buildTree(int* inorder, int inorderSize, int* postorder, int postorderSize){
+    // Check for empty traversals
+    if (inorderSize == 0 || postorderSize == 0) {
+        return NULL;
+    }
+    
+    // Create a new node with the last element of postorder traversal
+    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    int rootValue = postorder[postorderSize - 1];
+    root->val = rootValue;
+    root->left = NULL;
+    root->right = NULL;
+    
+    // Find the index of the root element in inorder traversal
+    int rootIndex;
+    for (int i = 0; i < inorderSize; i++) {
+        if (inorder[i] == rootValue) {
+            rootIndex = i;
+            break;
+        }
+    }
+    
+    // Recursively construct the left and right subtrees
+    root->left = buildTree(inorder, rootIndex, postorder, rootIndex);
+    root->right = buildTree(inorder + rootIndex + 1, inorderSize - rootIndex - 1, postorder + rootIndex, postorderSize - rootIndex - 1);
+    
+    return root;
+}
+int main()
+{
+  int inorder[5] = {9,3,15,20,7}; 
+  int postorder[5] = {9,15,7,20,3};
+  buildTree(inorder,5,postorder,5);
+}
